@@ -16,10 +16,34 @@
     <script id="film-template" type="text/x-handlebars-template">
 
       <div class="film">
+        <img src="{{ img_url }}" alt="{{title}} img">
         <h1>TITOLO: {{ title }}</h1>
         <h3>TITOLO ORIGINALE: {{ originalTitle }}</h3>
         <h3>LINGUA {{ language }}</h3>
         <h3>VOTO {{ vote }}</h3>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+      </div>
+      <hr>
+
+    </script>
+
+    <script id="tv-template" type="text/x-handlebars-template">
+
+      <div class="tv">
+        <img src="{{ img_url }}" alt="{{title}} img">
+        <h1>TITOLO: {{ title }}</h1>
+        <h3>TITOLO ORIGINALE: {{ originalTitle }}</h3>
+        <h3>LINGUA {{ language }}</h3>
+        <h3>VOTO {{ vote }}</h3>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
       </div>
       <hr>
 
@@ -35,6 +59,9 @@
     <button id="search-btn" type="button">SEARCH</button>
   </div>
   <div class="films">
+
+  </div>
+  <div class="tvs">
 
   </div>
   </body>
