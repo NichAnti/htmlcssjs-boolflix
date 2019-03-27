@@ -37,7 +37,7 @@ function getFilmData(url, tit, orTitle, lang, voto) {
   return film;
 }
 
-function getFilmData(url, tit, orTitle, lang, voto) {
+function getTvData(url, tit, orTitle, lang, voto) {
 
   voto = Math.ceil(voto / 2)
 
@@ -78,7 +78,7 @@ function getTvs() {
 
         var tv = inData.results[i];
 
-        var tvData = getFilmData(tv.backdrop_path, tv.name, tv.original_name, tv.original_language, tv.vote_average);
+        var tvData = getTvData(tv.backdrop_path, tv.name, tv.original_name, tv.original_language, tv.vote_average);
 
         var source = $("#tv-template").html();
         var compiled = Handlebars.compile(source);
