@@ -1,3 +1,25 @@
+function getLanUrl(lang) {
+
+  var flagUrl = "";
+
+  switch (lang) {
+    case "en":
+      flagUrl = "img/inglese.jpeg"
+      break;
+    case "es":
+      flagUrl = "img/spagnolo.svg"
+      break;
+    case "fr":
+      flagUrl = "img/francia.png"
+      break;
+    default:
+      flagUrl = "img/Jolly-roger.svg"
+      break;
+  }
+
+  return flagUrl;
+}
+
 function getFilmData(url, tit, orTitle, lang, voto) {
 
   voto = Math.ceil(voto / 2)
@@ -8,6 +30,7 @@ function getFilmData(url, tit, orTitle, lang, voto) {
     title: tit,
     originalTitle: orTitle,
     language: lang,
+    lan_url: getLanUrl(lang),
     vote: voto
   }
 
@@ -24,6 +47,7 @@ function getFilmData(url, tit, orTitle, lang, voto) {
     title: tit,
     originalTitle: orTitle,
     language: lang,
+    lan_url: getLanUrl(lang),
     vote: voto
   }
 
@@ -146,8 +170,3 @@ function init() {
 }
 
 $(init);
-
-//
-// var source = $("#entry-template").html();
-// var compiled = Handlebars.compile(source);
-// var finalHtml = compiled(data);
