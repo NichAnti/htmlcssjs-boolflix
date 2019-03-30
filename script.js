@@ -20,38 +20,110 @@ function getLanUrl(lang) {
   return flagUrl;
 }
 
-function getFilmData(url, tit, orTitle, lang, voto) {
+function getImgUrl(url) {
+
+  if(url == null)
+  {
+    return "img/defaultImg.png";
+  }
+  else {
+
+    return "https://image.tmdb.org/t/p/w342" + url;
+  }
+}
+
+function getFilmData(idid, url, tit, orTitle, lang, voto) {
 
   voto = Math.ceil(voto / 2)
 
   var film = {
 
-    img_url: "https://image.tmdb.org/t/p/w185/" + url,
+    img_url: getImgUrl(url),
     title: tit,
     originalTitle: orTitle,
     language: lang,
     lan_url: getLanUrl(lang),
-    vote: voto
+    vote: voto,
+    id: idid
   }
 
   return film;
 }
 
-function getTvData(url, tit, orTitle, lang, voto) {
+function getTvData(idid, url, tit, orTitle, lang, voto) {
 
   voto = Math.ceil(voto / 2)
 
   var tv = {
 
-    img_url: "https://image.tmdb.org/t/p/w185/" + url,
+    img_url: getImgUrl(url),
     title: tit,
     originalTitle: orTitle,
     language: lang,
     lan_url: getLanUrl(lang),
-    vote: voto
+    vote: voto,
+    id: idid
   }
 
   return tv;
+}
+
+function addCast(movie_id) {
+
+  var cast = "";
+
+  var outData = {
+
+    api_key: "2b352ef135f4227af9390b0e5a73bdc2"
+
+  }
+
+  $.ajax({
+
+    url: "https://api.themoviedb.org/3/movie/" + movie_id + "/credits",
+    method: "GET",
+    data: outData,
+    success: function(inData) {
+
+      if(inData.cast.length > 5) {
+
+        for (var i = 0; i < 5; i++) {
+
+          if (i < 4) {
+
+            cast += (inData.cast[i].name + ", ");
+          }
+          else {
+
+            cast += (inData.cast[i].name + "...");
+          }
+        }
+      }
+      else {
+
+        for (var i = 0; i < inData.cast.length; i++) {
+
+
+          if (i < (inData.cast.length - 1)) {
+
+            cast += (inData.cast[i].name + ", ");
+          }
+          else {
+
+            cast += (inData.cast[i].name);
+          }
+        }
+      }
+
+      $("[data-id = " + movie_id + "]").find(".info").append("<span>" + cast + "</span>");
+    },
+
+    error: function (request, state, error) {
+      console.log("request " + request);
+      console.log("state " + state);
+      console.log("error " + error);
+    }
+  })
 }
 
 function getTvs() {
@@ -72,24 +144,35 @@ function getTvs() {
     data: outData,
     success: function(inData) {
 
-      $(".tvs").empty();
+      if(inData.results.length > 0) {
 
-      for (var i = 0; i < inData.results.length; i++) {
+        $(".tv-title-section").show();
+        $(".tvs").empty();
 
-        var tv = inData.results[i];
+        for (var i = 0; i < inData.results.length; i++) {
 
-        var tvData = getTvData(tv.backdrop_path, tv.name, tv.original_name, tv.original_language, tv.vote_average);
+          var tv = inData.results[i];
 
-        var source = $("#tv-template").html();
-        var compiled = Handlebars.compile(source);
-        var finalHtml = compiled(tvData);
+          var tvData = getTvData(tv.id, tv.poster_path, tv.name, tv.original_name, tv.original_language, tv.vote_average);
 
-        $(".tvs").append(finalHtml);
+          var source = $("#tv-template").html();
+          var compiled = Handlebars.compile(source);
+          var finalHtml = compiled(tvData);
 
-        for(var j = 0; j < tvData.vote; j++) {
+          $(".tvs").append(finalHtml);
 
-          $(".tv").eq(i).find(".fa-star").eq(j).removeClass("far").addClass("fas");
+          for(var j = 0; j < tvData.vote; j++) {
+
+            $(".tv").eq(i).find(".fa-star").eq(j).removeClass("far").addClass("fas");
+          }
+
+          addCast(tv.id);
+
         }
+      }
+      else {
+        $(".tv-title-section").hide();
+        $(".tvs").empty();
       }
     },
 
@@ -120,24 +203,34 @@ function getFilms() {
     data: outData,
     success: function(inData) {
 
-      $(".films").empty();
+      if(inData.results.length > 0) {
 
-      for (var i = 0; i < inData.results.length; i++) {
+        $(".film-title-section").show();
+        $(".films").empty();
 
-        var film = inData.results[i];
+        for (var i = 0; i < inData.results.length; i++) {
 
-        var filmData = getFilmData(film.backdrop_path, film.title, film.original_title, film.original_language, film.vote_average);
+          var film = inData.results[i];
 
-        var source = $("#film-template").html();
-        var compiled = Handlebars.compile(source);
-        var finalHtml = compiled(filmData);
+          var filmData = getFilmData(film.id, film.poster_path, film.title, film.original_title, film.original_language, film.vote_average);
 
-        $(".films").append(finalHtml);
+          var source = $("#film-template").html();
+          var compiled = Handlebars.compile(source);
+          var finalHtml = compiled(filmData);
 
-        for(var j = 0; j < filmData.vote; j++) {
+          $(".films").append(finalHtml);
 
-          $(".film").eq(i).find(".fa-star").eq(j).removeClass("far").addClass("fas");
+          for(var j = 0; j < filmData.vote; j++) {
+
+            $(".film").eq(i).find(".fa-star").eq(j).removeClass("far").addClass("fas");
+          }
+
+          addCast(film.id);
         }
+      }
+      else {
+        $(".film-title-section").hide();
+        $(".films").empty();
       }
     },
 
